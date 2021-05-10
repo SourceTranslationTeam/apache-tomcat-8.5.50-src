@@ -65,6 +65,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.util.ContextName;
 import org.apache.catalina.util.Introspection;
+import org.apache.jasper.servlet.JasperInitializer;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.Jar;
@@ -775,7 +776,10 @@ public class ContextConfig implements LifecycleListener {
 
         webConfig();
 
-        if (!context.getIgnoreAnnotations()) {
+		// 初始化jsp解析引擎-jasper
+		context.addServletContainerInitializer(new JasperInitializer(), null);
+
+		if (!context.getIgnoreAnnotations()) {
             applicationAnnotationsConfig();
         }
         if (ok) {
