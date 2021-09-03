@@ -687,16 +687,14 @@ public final class Mapper {
      * @throws IOException if the buffers are too small to hold the results of
      *                     the mapping.
      */
-    public void map(MessageBytes host, MessageBytes uri, String version,
-                    MappingData mappingData) throws IOException {
-
+    public void map(MessageBytes host, MessageBytes uri, String version, MappingData mappingData) throws IOException {
         if (host.isNull()) {
             host.getCharChunk().append(defaultHostName);
         }
+
         host.toChars();
         uri.toChars();
-        internalMap(host.getCharChunk(), uri.getCharChunk(), version,
-                mappingData);
+        internalMap(host.getCharChunk(), uri.getCharChunk(), version, mappingData);
     }
 
 
@@ -729,9 +727,7 @@ public final class Mapper {
      * Map the specified URI.
      * @throws IOException
      */
-    private final void internalMap(CharChunk host, CharChunk uri,
-            String version, MappingData mappingData) throws IOException {
-
+    private final void internalMap(CharChunk host, CharChunk uri, String version, MappingData mappingData) throws IOException {
         if (mappingData.host != null) {
             // The legacy code (dating down at least to Tomcat 4.1) just
             // skipped all mapping work in this case. That behaviour has a risk
@@ -1561,8 +1557,8 @@ public final class Mapper {
     // ------------------------------------------------- MapElement Inner Class
 
 
+    // MapElement 基类（内部类）
     protected abstract static class MapElement<T> {
-
         public final String name;
         public final T object;
 
@@ -1577,7 +1573,6 @@ public final class Mapper {
 
 
     protected static final class MappedHost extends MapElement<Host> {
-
         public volatile ContextList contextList;
 
         /**
@@ -1652,7 +1647,6 @@ public final class Mapper {
 
 
     protected static final class ContextList {
-
         public final MappedContext[] contexts;
         public final int nesting;
 
@@ -1707,9 +1701,9 @@ public final class Mapper {
         public final WebResourceRoot resources;
         public String[] welcomeResources;
         public MappedWrapper defaultWrapper = null;
-        public MappedWrapper[] exactWrappers = new MappedWrapper[0];
-        public MappedWrapper[] wildcardWrappers = new MappedWrapper[0];
-        public MappedWrapper[] extensionWrappers = new MappedWrapper[0];
+        public MappedWrapper[] exactWrappers = new MappedWrapper[0];     // 精确匹配 servlet
+        public MappedWrapper[] wildcardWrappers = new MappedWrapper[0];  // 模糊匹配 servlet
+        public MappedWrapper[] extensionWrappers = new MappedWrapper[0]; // 扩展名匹配 servlet
         public int nesting = 0;
         private volatile boolean paused;
 

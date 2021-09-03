@@ -808,7 +808,6 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
         public void run() {
             // Loop until destroy() is called
             while (true) {
-
                 boolean hasEvents = false;
 
                 try {
@@ -823,6 +822,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                         }
                         wakeupCounter.set(0);
                     }
+
                     if (close) {
                         events();
                         timeout(0, false);
@@ -838,11 +838,11 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                     log.error("",x);
                     continue;
                 }
+
                 //either we timed out or we woke up, process events first
                 if ( keyCount == 0 ) hasEvents = (hasEvents | events());
 
-                Iterator<SelectionKey> iterator =
-                    keyCount > 0 ? selector.selectedKeys().iterator() : null;
+                Iterator<SelectionKey> iterator = keyCount > 0 ? selector.selectedKeys().iterator() : null;
                 // Walk through the collection of ready keys and dispatch
                 // any active event.
                 while (iterator != null && iterator.hasNext()) {
@@ -882,11 +882,13 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                                     closeSocket = true;
                                 }
                             }
+
                             if (!closeSocket && sk.isWritable()) {
                                 if (!processSocket(attachment, SocketEvent.OPEN_WRITE, true)) {
                                     closeSocket = true;
                                 }
                             }
+
                             if (closeSocket) {
                                 cancelledKey(sk);
                             }
@@ -1586,8 +1588,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                             // No TLS handshaking required. Let the handler
                             // process this socket / event combination.
                             handshake = 0;
-                        } else if (event == SocketEvent.STOP || event == SocketEvent.DISCONNECT ||
-                                event == SocketEvent.ERROR) {
+                        } else if (event == SocketEvent.STOP || event == SocketEvent.DISCONNECT || event == SocketEvent.ERROR) {
                             // Unable to complete the TLS handshake. Treat it as
                             // if the handshake failed.
                             handshake = -1;
@@ -1611,12 +1612,14 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                 }
                 if (handshake == 0) {
                     SocketState state = SocketState.OPEN;
+
                     // Process the request from this socket
                     if (event == null) {
                         state = getHandler().process(socketWrapper, SocketEvent.OPEN_READ);
                     } else {
                         state = getHandler().process(socketWrapper, event);
                     }
+
                     if (state == SocketState.CLOSED) {
                         close(socket, key);
                     }

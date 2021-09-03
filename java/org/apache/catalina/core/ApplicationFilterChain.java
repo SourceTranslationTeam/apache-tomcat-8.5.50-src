@@ -134,8 +134,7 @@ public final class ApplicationFilterChain implements FilterChain {
      * @exception ServletException if a servlet exception occurs
      */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response)
-        throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
 
         if( Globals.IS_SECURITY_ENABLED ) {
             final ServletRequest req = request;
@@ -167,9 +166,7 @@ public final class ApplicationFilterChain implements FilterChain {
         }
     }
 
-    private void internalDoFilter(ServletRequest request,
-                                  ServletResponse response)
-        throws IOException, ServletException {
+    private void internalDoFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
 
         // Call the next filter if there is one
         if (pos < n) {

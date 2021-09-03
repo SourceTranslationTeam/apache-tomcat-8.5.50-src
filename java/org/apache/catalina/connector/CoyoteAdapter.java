@@ -297,9 +297,7 @@ public class CoyoteAdapter implements Adapter {
 
 
     @Override
-    public void service(org.apache.coyote.Request req, org.apache.coyote.Response res)
-            throws Exception {
-
+    public void service(org.apache.coyote.Request req, org.apache.coyote.Response res) throws Exception {
         Request request = (Request) req.getNote(ADAPTER_NOTES);
         Response response = (Response) res.getNote(ADAPTER_NOTES);
 
@@ -337,12 +335,12 @@ public class CoyoteAdapter implements Adapter {
             postParseSuccess = postParseRequest(req, request, res, response);
             if (postParseSuccess) {
                 //check valves if we support async
-                request.setAsyncSupported(
-                        connector.getService().getContainer().getPipeline().isAsyncSupported());
+                request.setAsyncSupported(connector.getService().getContainer().getPipeline().isAsyncSupported());
+
                 // Calling the container
-                connector.getService().getContainer().getPipeline().getFirst().invoke(
-                        request, response);
+                connector.getService().getContainer().getPipeline().getFirst().invoke(request, response);
             }
+
             if (request.isAsync()) {
                 async = true;
                 ReadListener readListener = req.getReadListener();
@@ -360,8 +358,7 @@ public class CoyoteAdapter implements Adapter {
                     }
                 }
 
-                Throwable throwable =
-                        (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+                Throwable throwable = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
                 // If an async request was started, is not going to end once
                 // this container thread finishes and an error occurred, trigger
@@ -564,9 +561,7 @@ public class CoyoteAdapter implements Adapter {
      * @throws ServletException If the supported methods of the target servlet
      *                          cannot be determined
      */
-    protected boolean postParseRequest(org.apache.coyote.Request req, Request request,
-            org.apache.coyote.Response res, Response response) throws IOException, ServletException {
-
+    protected boolean postParseRequest(org.apache.coyote.Request req, Request request, org.apache.coyote.Response res, Response response) throws IOException, ServletException {
         // If the processor has set the scheme (AJP does this, HTTP does this if
         // SSL is enabled) use this to set the secure flag as well. If the
         // processor hasn't set it, use the settings from the connector
@@ -594,6 +589,7 @@ public class CoyoteAdapter implements Adapter {
                 req.setServerPort(80);
             }
         }
+
         if (proxyName != null) {
             req.serverName().setString(proxyName);
         }
@@ -609,6 +605,7 @@ public class CoyoteAdapter implements Adapter {
                 if (connector.getAllowTrace()) {
                     allow.append(", TRACE");
                 }
+
                 res.setHeader("Allow", allow.toString());
                 // Access log entry as processing won't reach AccessLogValve
                 connector.getService().getContainer().logAccess(request, response, 0, true);
@@ -636,6 +633,7 @@ public class CoyoteAdapter implements Adapter {
             } catch (IOException ioe) {
                 response.sendError(400, "Invalid URI: " + ioe.getMessage());
             }
+
             // Normalization
             if (normalize(req.decodedURI())) {
                 // Character decoding
@@ -692,8 +690,7 @@ public class CoyoteAdapter implements Adapter {
 
         while (mapRequired) {
             // This will map the the latest version by default
-            connector.getService().getMapper().map(serverName, decodedURI,
-                    version, request.getMappingData());
+            connector.getService().getMapper().map(serverName, decodedURI, version, request.getMappingData());
 
             // If there is no context at this point, either this is a 404
             // because no ROOT context has been deployed or the URI was invalid

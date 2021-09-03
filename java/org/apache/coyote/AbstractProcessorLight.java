@@ -38,17 +38,17 @@ public abstract class AbstractProcessorLight implements Processor {
 
 
     @Override
-    public SocketState process(SocketWrapperBase<?> socketWrapper, SocketEvent status)
-            throws IOException {
-
+    public SocketState process(SocketWrapperBase<?> socketWrapper, SocketEvent status) throws IOException {
         SocketState state = SocketState.CLOSED;
         Iterator<DispatchType> dispatches = null;
+
         do {
             if (dispatches != null) {
                 DispatchType nextDispatch = dispatches.next();
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Processing dispatch type: [" + nextDispatch + "]");
                 }
+
                 state = dispatch(nextDispatch.getSocketStatus());
                 if (!dispatches.hasNext()) {
                     state = checkForPipelinedData(state, socketWrapper);

@@ -104,8 +104,7 @@ final class StandardHostValve extends ValveBase {
      * @exception ServletException if a servlet error occurred
      */
     @Override
-    public final void invoke(Request request, Response response)
-        throws IOException, ServletException {
+    public final void invoke(Request request, Response response) throws IOException, ServletException {
 
         // Select the Context to be used for this Request
         Context context = request.getContext();

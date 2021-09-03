@@ -59,8 +59,7 @@ final class StandardContextValve extends ValveBase {
      * @exception ServletException if a servlet error occurred
      */
     @Override
-    public final void invoke(Request request, Response response)
-        throws IOException, ServletException {
+    public final void invoke(Request request, Response response) throws IOException, ServletException {
 
         // Disallow any direct access to resources under WEB-INF or META-INF
         MessageBytes requestPathMB = request.getRequestPathMB();
@@ -83,8 +82,7 @@ final class StandardContextValve extends ValveBase {
         try {
             response.sendAcknowledgement();
         } catch (IOException ioe) {
-            container.getLogger().error(sm.getString(
-                    "standardContextValve.acknowledgeException"), ioe);
+            container.getLogger().error(sm.getString("standardContextValve.acknowledgeException"), ioe);
             request.setAttribute(RequestDispatcher.ERROR_EXCEPTION, ioe);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;

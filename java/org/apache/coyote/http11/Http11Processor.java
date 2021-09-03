@@ -479,8 +479,7 @@ public class Http11Processor extends AbstractProcessor {
 
 
     @Override
-    public SocketState service(SocketWrapperBase<?> socketWrapper)
-        throws IOException {
+    public SocketState service(SocketWrapperBase<?> socketWrapper) throws IOException {
         RequestInfo rp = request.getRequestProcessor();
         rp.setStage(org.apache.coyote.Constants.STAGE_PARSE);
 
@@ -494,9 +493,7 @@ public class Http11Processor extends AbstractProcessor {
         boolean keptAlive = false;
         SendfileState sendfileState = SendfileState.DONE;
 
-        while (!getErrorState().isError() && keepAlive && !isAsync() && upgradeToken == null &&
-                sendfileState == SendfileState.DONE && !endpoint.isPaused()) {
-
+        while (!getErrorState().isError() && keepAlive && !isAsync() && upgradeToken == null && sendfileState == SendfileState.DONE && !endpoint.isPaused()) {
             // Parsing the request header
             try {
                 if (!inputBuffer.parseRequestLine(keptAlive)) {
@@ -522,6 +519,7 @@ public class Http11Processor extends AbstractProcessor {
                         readComplete = false;
                         break;
                     }
+
                     if (!disableUploadTimeout) {
                         socketWrapper.setReadTimeout(connectionUploadTimeout);
                     }
@@ -530,6 +528,7 @@ public class Http11Processor extends AbstractProcessor {
                 if (log.isDebugEnabled()) {
                     log.debug(sm.getString("http11processor.header.parse"), e);
                 }
+
                 setErrorState(ErrorState.CLOSE_CONNECTION_NOW, e);
                 break;
             } catch (Throwable t) {
@@ -569,9 +568,7 @@ public class Http11Processor extends AbstractProcessor {
                         action(ActionCode.CLOSE,  null);
                         getAdapter().log(request, response, 0);
 
-                        InternalHttpUpgradeHandler upgradeHandler =
-                                upgradeProtocol.getInternalUpgradeHandler(
-                                        getAdapter(), cloneRequest(request));
+                        InternalHttpUpgradeHandler upgradeHandler = upgradeProtocol.getInternalUpgradeHandler(getAdapter(), cloneRequest(request));
                         UpgradeToken upgradeToken = new UpgradeToken(upgradeHandler, null, null);
                         action(ActionCode.UPGRADE, upgradeToken);
                         return SocketState.UPGRADING;
@@ -597,8 +594,7 @@ public class Http11Processor extends AbstractProcessor {
 
             if (maxKeepAliveRequests == 1) {
                 keepAlive = false;
-            } else if (maxKeepAliveRequests > 0 &&
-                    socketWrapper.decrementKeepAlive() <= 0) {
+            } else if (maxKeepAliveRequests > 0 && socketWrapper.decrementKeepAlive() <= 0) {
                 keepAlive = false;
             }
 
@@ -607,13 +603,13 @@ public class Http11Processor extends AbstractProcessor {
                 try {
                     rp.setStage(org.apache.coyote.Constants.STAGE_SERVICE);
                     getAdapter().service(request, response);
+
                     // Handle when the response was committed before a serious
                     // error occurred.  Throwing a ServletException should both
                     // set the status to 500 and set the errorException.
                     // If we fail here, then the response is likely already
                     // committed, so we can't try and set headers.
-                    if(keepAlive && !getErrorState().isError() && !isAsync() &&
-                            statusDropsConnection(response.getStatus())) {
+                    if(keepAlive && !getErrorState().isError() && !isAsync() && statusDropsConnection(response.getStatus())) {
                         setErrorState(ErrorState.CLOSE_CLEAN, null);
                     }
                 } catch (InterruptedIOException e) {

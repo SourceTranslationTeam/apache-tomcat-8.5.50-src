@@ -76,7 +76,6 @@ public class ErrorReportValve extends ValveBase {
      */
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
-
         // Perform the request
         getNext().invoke(request, response);
 

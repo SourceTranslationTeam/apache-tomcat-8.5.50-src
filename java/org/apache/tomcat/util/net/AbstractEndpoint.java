@@ -81,8 +81,7 @@ public abstract class AbstractEndpoint<S> {
          *
          * @return The state of the socket after processing
          */
-        public SocketState process(SocketWrapperBase<S> socket,
-                SocketEvent status);
+        public SocketState process(SocketWrapperBase<S> socket, SocketEvent status);
 
 
         /**
@@ -1063,18 +1062,19 @@ public abstract class AbstractEndpoint<S> {
      *
      * @return if processing was triggered successfully
      */
-    public boolean processSocket(SocketWrapperBase<S> socketWrapper,
-            SocketEvent event, boolean dispatch) {
+    public boolean processSocket(SocketWrapperBase<S> socketWrapper, SocketEvent event, boolean dispatch) {
         try {
             if (socketWrapper == null) {
                 return false;
             }
+
             SocketProcessorBase<S> sc = processorCache.pop();
             if (sc == null) {
                 sc = createSocketProcessor(socketWrapper, event);
             } else {
                 sc.reset(socketWrapper, event);
             }
+
             Executor executor = getExecutor();
             if (dispatch && executor != null) {
                 executor.execute(sc);

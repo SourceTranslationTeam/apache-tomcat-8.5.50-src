@@ -500,10 +500,8 @@ public abstract class AuthenticatorBase extends ValveBase
      */
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
-
         if (log.isDebugEnabled()) {
-            log.debug("Security checking request " + request.getMethod() + " " +
-                    request.getRequestURI());
+            log.debug("Security checking request " + request.getMethod() + " " + request.getRequestURI());
         }
 
         // Have we got a cached authenticated Principal to record?
@@ -515,8 +513,7 @@ public abstract class AuthenticatorBase extends ValveBase
                     principal = session.getPrincipal();
                     if (principal != null) {
                         if (log.isDebugEnabled()) {
-                            log.debug("We have cached auth type " + session.getAuthType() +
-                                    " for principal " + principal);
+                            log.debug("We have cached auth type " + session.getAuthType() + " for principal " + principal);
                         }
                         request.setAuthType(session.getAuthType());
                         request.setUserPrincipal(principal);
@@ -546,8 +543,7 @@ public abstract class AuthenticatorBase extends ValveBase
 
         // Make sure that constrained resources are not cached by web proxies
         // or browsers as caching can provide a security hole
-        if (constraints != null && disableProxyCaching &&
-                !"POST".equalsIgnoreCase(request.getMethod())) {
+        if (constraints != null && disableProxyCaching && !"POST".equalsIgnoreCase(request.getMethod())) {
             if (securePagesWithPragma) {
                 // Note: These can cause problems with downloading files with IE
                 response.setHeader("Pragma", "No-cache");
@@ -583,8 +579,7 @@ public abstract class AuthenticatorBase extends ValveBase
             for (int i = 0; i < constraints.length && hasAuthConstraint; i++) {
                 if (!constraints[i].getAuthConstraint()) {
                     hasAuthConstraint = false;
-                } else if (!constraints[i].getAllRoles() &&
-                        !constraints[i].getAuthenticatedUsers()) {
+                } else if (!constraints[i].getAllRoles() && !constraints[i].getAuthenticatedUsers()) {
                     String[] roles = constraints[i].findAuthRoles();
                     if (roles == null || roles.length == 0) {
                         hasAuthConstraint = false;
@@ -598,12 +593,10 @@ public abstract class AuthenticatorBase extends ValveBase
         }
 
         if (!authRequired && context.getPreemptiveAuthentication()) {
-            authRequired =
-                    request.getCoyoteRequest().getMimeHeaders().getValue("authorization") != null;
+            authRequired = request.getCoyoteRequest().getMimeHeaders().getValue("authorization") != null;
         }
 
-        if (!authRequired && context.getPreemptiveAuthentication() &&
-                HttpServletRequest.CLIENT_CERT_AUTH.equals(getAuthMethod())) {
+        if (!authRequired && context.getPreemptiveAuthentication() && HttpServletRequest.CLIENT_CERT_AUTH.equals(getAuthMethod())) {
             X509Certificate[] certs = getRequestCertificates(request);
             authRequired = certs != null && certs.length > 0;
         }
@@ -631,8 +624,7 @@ public abstract class AuthenticatorBase extends ValveBase
             }
 
             if (jaspicProvider == null && !doAuthenticate(request, response) ||
-                    jaspicProvider != null &&
-                            !authenticateJaspic(request, response, jaspicState, false)) {
+                    jaspicProvider != null && !authenticateJaspic(request, response, jaspicState, false)) {
                 if (log.isDebugEnabled()) {
                     log.debug("Failed authenticate() test");
                 }
