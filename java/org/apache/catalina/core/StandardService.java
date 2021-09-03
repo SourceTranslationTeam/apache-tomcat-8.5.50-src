@@ -411,9 +411,9 @@ public class StandardService extends LifecycleMBeanBase implements Service {
      */
     @Override
     protected void startInternal() throws LifecycleException {
-
         if(log.isInfoEnabled())
             log.info(sm.getString("standardService.start.name", this.name));
+
         setState(LifecycleState.STARTING);
 
         // Start our defined Container first
@@ -440,9 +440,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                         connector.start();
                     }
                 } catch (Exception e) {
-                    log.error(sm.getString(
-                            "standardService.connector.startFailed",
-                            connector), e);
+                    log.error(sm.getString("standardService.connector.startFailed", connector), e);
                 }
             }
         }
@@ -527,7 +525,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
      */
     @Override
     protected void initInternal() throws LifecycleException {
-
         super.initInternal();
 
         if (engine != null) {
@@ -551,8 +548,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                 try {
                     connector.init();
                 } catch (Exception e) {
-                    String message = sm.getString(
-                            "standardService.connector.initFailed", connector);
+                    String message = sm.getString("standardService.connector.initFailed", connector);
                     log.error(message, e);
 
                     if (Boolean.getBoolean("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE"))

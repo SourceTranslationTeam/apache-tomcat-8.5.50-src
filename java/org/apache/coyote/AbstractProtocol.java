@@ -570,8 +570,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
 
         if (this.domain != null) {
             rgOname = new ObjectName(domain + ":type=GlobalRequestProcessor,name=" + getName());
-            Registry.getRegistry(null, null).registerComponent(
-                    getHandler().getGlobal(), rgOname, null);
+            Registry.getRegistry(null, null).registerComponent(getHandler().getGlobal(), rgOname, null);
         }
 
         String endpointName = getName();
@@ -597,6 +596,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
         if (priority < Thread.MIN_PRIORITY || priority > Thread.MAX_PRIORITY) {
             priority = Thread.NORM_PRIORITY;
         }
+
         timeoutThread.setPriority(priority);
         timeoutThread.setDaemon(true);
         timeoutThread.start();

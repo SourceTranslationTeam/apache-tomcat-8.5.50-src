@@ -529,12 +529,11 @@ public class Catalina {
      * Start a new server instance.
      */
     public void load() {
-
         if (loaded) {
             return;
         }
-        loaded = true;
 
+        loaded = true;
         long t1 = System.nanoTime();
 
         initDirs();
@@ -543,11 +542,13 @@ public class Catalina {
         initNaming();
 
         // Create and execute our Digester
+        // xml 配置文件的解析器，解析 server.xml
         Digester digester = createStartDigester();
 
         InputSource inputSource = null;
         InputStream inputStream = null;
         File file = null;
+
         try {
             try {
                 file = configFile();
@@ -558,17 +559,14 @@ public class Catalina {
                     log.debug(sm.getString("catalina.configFail", file), e);
                 }
             }
+
             if (inputStream == null) {
                 try {
-                    inputStream = getClass().getClassLoader()
-                        .getResourceAsStream(getConfigFile());
-                    inputSource = new InputSource
-                        (getClass().getClassLoader()
-                         .getResource(getConfigFile()).toString());
+                    inputStream = getClass().getClassLoader().getResourceAsStream(getConfigFile());
+                    inputSource = new InputSource(getClass().getClassLoader().getResource(getConfigFile()).toString());
                 } catch (Exception e) {
                     if (log.isDebugEnabled()) {
-                        log.debug(sm.getString("catalina.configFail",
-                                getConfigFile()), e);
+                        log.debug(sm.getString("catalina.configFail", getConfigFile()), e);
                     }
                 }
             }
@@ -577,15 +575,11 @@ public class Catalina {
             // Alternative: don't bother with xml, just create it manually.
             if (inputStream == null) {
                 try {
-                    inputStream = getClass().getClassLoader()
-                            .getResourceAsStream("server-embed.xml");
-                    inputSource = new InputSource
-                    (getClass().getClassLoader()
-                            .getResource("server-embed.xml").toString());
+                    inputStream = getClass().getClassLoader().getResourceAsStream("server-embed.xml");
+                    inputSource = new InputSource(getClass().getClassLoader().getResource("server-embed.xml").toString());
                 } catch (Exception e) {
                     if (log.isDebugEnabled()) {
-                        log.debug(sm.getString("catalina.configFail",
-                                "server-embed.xml"), e);
+                        log.debug(sm.getString("catalina.configFail", "server-embed.xml"), e);
                     }
                 }
             }
@@ -593,11 +587,9 @@ public class Catalina {
 
             if (inputStream == null || inputSource == null) {
                 if  (file == null) {
-                    log.warn(sm.getString("catalina.configFail",
-                            getConfigFile() + "] or [server-embed.xml]"));
+                    log.warn(sm.getString("catalina.configFail", getConfigFile() + "] or [server-embed.xml]"));
                 } else {
-                    log.warn(sm.getString("catalina.configFail",
-                            file.getAbsolutePath()));
+                    log.warn(sm.getString("catalina.configFail", file.getAbsolutePath()));
                     if (file.exists() && !file.canRead()) {
                         log.warn("Permissions incorrect, read permission is not allowed on the file.");
                     }
@@ -610,8 +602,7 @@ public class Catalina {
                 digester.push(this);
                 digester.parse(inputSource);
             } catch (SAXParseException spe) {
-                log.warn("Catalina.start using " + getConfigFile() + ": " +
-                        spe.getMessage());
+                log.warn("Catalina.start using " + getConfigFile() + ": " + spe.getMessage());
                 return;
             } catch (Exception e) {
                 log.warn("Catalina.start using " + getConfigFile() + ": " , e);
@@ -671,7 +662,6 @@ public class Catalina {
      * Start a new server instance.
      */
     public void start() {
-
         if (getServer() == null) {
             load();
         }
@@ -706,6 +696,7 @@ public class Catalina {
             if (shutdownHook == null) {
                 shutdownHook = new CatalinaShutdownHook();
             }
+
             Runtime.getRuntime().addShutdownHook(shutdownHook);
 
             // If JULI is being used, disable JULI's shutdown hook since
@@ -713,8 +704,7 @@ public class Catalina {
             // if JULI's hook completes before the CatalinaShutdownHook()
             LogManager logManager = LogManager.getLogManager();
             if (logManager instanceof ClassLoaderLogManager) {
-                ((ClassLoaderLogManager) logManager).setUseShutdownHook(
-                        false);
+                ((ClassLoaderLogManager) logManager).setUseShutdownHook(false);
             }
         }
 

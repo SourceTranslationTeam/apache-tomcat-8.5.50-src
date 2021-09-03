@@ -248,7 +248,6 @@ public final class Bootstrap {
      * @throws Exception Fatal initialization error
      */
     public void init() throws Exception {
-
         initClassLoaders();
 
         Thread.currentThread().setContextClassLoader(catalinaLoader);
@@ -269,10 +268,10 @@ public final class Bootstrap {
         paramTypes[0] = Class.forName("java.lang.ClassLoader");
         Object paramValues[] = new Object[1];
         paramValues[0] = sharedLoader;
-        Method method =
-            startupInstance.getClass().getMethod(methodName, paramTypes);
+        Method method = startupInstance.getClass().getMethod(methodName, paramTypes);
         method.invoke(startupInstance, paramValues);
 
+        // catalinaDaemon 是一个 Catalina 实例
         catalinaDaemon = startupInstance;
     }
 
@@ -281,12 +280,12 @@ public final class Bootstrap {
      * Load daemon.
      */
     private void load(String[] arguments) throws Exception {
-
         // Call the load() method
         String methodName = "load";
         Object param[];
         Class<?> paramTypes[];
-        if (arguments==null || arguments.length==0) {
+
+        if (arguments == null || arguments.length == 0) {
             paramTypes = null;
             param = null;
         } else {
@@ -295,11 +294,14 @@ public final class Bootstrap {
             param = new Object[1];
             param[0] = arguments;
         }
-        Method method =
-            catalinaDaemon.getClass().getMethod(methodName, paramTypes);
+
+        Method method = catalinaDaemon.getClass().getMethod(methodName, paramTypes);
+
         if (log.isDebugEnabled()) {
             log.debug("Calling startup class " + method);
         }
+
+        // catalinaDaemon 调用的是 Catalina.load（）方法
         method.invoke(catalinaDaemon, param);
     }
 
@@ -434,18 +436,20 @@ public final class Bootstrap {
      * @param args Command line arguments to be processed
      */
     public static void main(String args[]) {
-
         synchronized (daemonLock) {
             if (daemon == null) {
                 // Don't set daemon until init() has completed
                 Bootstrap bootstrap = new Bootstrap();
                 try {
+                    // 初始化
                     bootstrap.init();
                 } catch (Throwable t) {
                     handleThrowable(t);
                     t.printStackTrace();
                     return;
                 }
+
+                // daemon 的当前 Bootstrap 类对象本身
                 daemon = bootstrap;
             } else {
                 // When running as a service the call to stop will be on a new
@@ -470,8 +474,9 @@ public final class Bootstrap {
                 daemon.stop();
             } else if (command.equals("start")) {
                 daemon.setAwait(true);
-                daemon.load(args);
-                daemon.start();
+                daemon.load(args); // 加载
+                daemon.start();    // 启动
+
                 if (null == daemon.getServer()) {
                     System.exit(1);
                 }
@@ -488,10 +493,10 @@ public final class Bootstrap {
             }
         } catch (Throwable t) {
             // Unwrap the Exception for clearer error reporting
-            if (t instanceof InvocationTargetException &&
-                    t.getCause() != null) {
+            if (t instanceof InvocationTargetException && t.getCause() != null) {
                 t = t.getCause();
             }
+
             handleThrowable(t);
             t.printStackTrace();
             System.exit(1);

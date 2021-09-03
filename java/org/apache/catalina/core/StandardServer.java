@@ -754,7 +754,6 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      */
     @Override
     protected void startInternal() throws LifecycleException {
-
         fireLifecycleEvent(CONFIGURE_START_EVENT, null);
         setState(LifecycleState.STARTING);
 
@@ -798,7 +797,6 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      */
     @Override
     protected void initInternal() throws LifecycleException {
-
         super.initInternal();
 
         // Register global String cache
@@ -824,12 +822,12 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
             while (cl != null && cl != ClassLoader.getSystemClassLoader()) {
                 if (cl instanceof URLClassLoader) {
                     URL[] urls = ((URLClassLoader) cl).getURLs();
+
                     for (URL url : urls) {
                         if (url.getProtocol().equals("file")) {
                             try {
                                 File f = new File (url.toURI());
-                                if (f.isFile() &&
-                                        f.getName().endsWith(".jar")) {
+                                if (f.isFile() && f.getName().endsWith(".jar")) {
                                     ExtensionValidator.addSystemResource(f);
                                 }
                             } catch (URISyntaxException e) {
@@ -843,6 +841,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
                 cl = cl.getParent();
             }
         }
+
         // Initialize our defined Services
         for (int i = 0; i < services.length; i++) {
             services[i].init();

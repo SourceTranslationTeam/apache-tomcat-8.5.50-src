@@ -213,7 +213,6 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
      */
     @Override
     public void bind() throws Exception {
-
         if (!getUseInheritedChannel()) {
             serverSock = ServerSocketChannel.open();
             socketProperties.setProperties(serverSock.socket());
@@ -222,6 +221,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
         } else {
             // Retrieve the channel provided by the OS
             Channel ic = System.inheritedChannel();
+
             if (ic instanceof ServerSocketChannel) {
                 serverSock = (ServerSocketChannel) ic;
             }
@@ -229,6 +229,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                 throw new IllegalArgumentException(sm.getString("endpoint.init.bind.inherited"));
             }
         }
+
         serverSock.configureBlocking(true); //mimic APR behavior
 
         // Initialize thread count defaults for acceptor, poller
@@ -240,6 +241,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
             //minimum one poller thread
             pollerThreadCount = 1;
         }
+
         setStopLatch(new CountDownLatch(pollerThreadCount));
 
         // Initialize SSL if needed
@@ -253,17 +255,13 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
      */
     @Override
     public void startInternal() throws Exception {
-
         if (!running) {
             running = true;
             paused = false;
 
-            processorCache = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
-                    socketProperties.getProcessorCache());
-            eventCache = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
-                            socketProperties.getEventCache());
-            nioChannels = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
-                    socketProperties.getBufferPool());
+            processorCache = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE, socketProperties.getProcessorCache());
+            eventCache = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE, socketProperties.getEventCache());
+            nioChannels = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE, socketProperties.getBufferPool());
 
             // Create worker collection
             if ( getExecutor() == null ) {
@@ -449,15 +447,12 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
      * hands them off to an appropriate processor.
      */
     protected class Acceptor extends AbstractEndpoint.Acceptor {
-
         @Override
         public void run() {
-
             int errorDelay = 0;
 
             // Loop until we receive a shutdown command
             while (running) {
-
                 // Loop if endpoint is paused
                 while (paused && running) {
                     state = AcceptorState.PAUSED;

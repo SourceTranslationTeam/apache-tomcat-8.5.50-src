@@ -1118,13 +1118,13 @@ public abstract class AbstractEndpoint<S> {
             bind();
             bindState = BindState.BOUND_ON_INIT;
         }
+
         if (this.domain != null) {
             // Register endpoint (as ThreadPool - historical name)
             oname = new ObjectName(domain + ":type=ThreadPool,name=\"" + getName() + "\"");
             Registry.getRegistry(null, null).registerComponent(this, oname, null);
 
-            ObjectName socketPropertiesOname = new ObjectName(domain +
-                    ":type=ThreadPool,name=\"" + getName() + "\",subType=SocketProperties");
+            ObjectName socketPropertiesOname = new ObjectName(domain + ":type=ThreadPool,name=\"" + getName() + "\",subType=SocketProperties");
             socketProperties.setObjectName(socketPropertiesOname);
             Registry.getRegistry(null, null).registerComponent(socketProperties, socketPropertiesOname, null);
 
